@@ -8,6 +8,8 @@ import mongoose from 'mongoose';
 
 //routers
 import {authRouter} from './auth/auth.routes';
+import {errorHandler, handleNotFound} from './utils/middlewares';
+import {DatabaseConnectionError} from './utils/errors';
 
 const PORT = process.env.PORT || 3000;
 
@@ -27,14 +29,14 @@ export class AppModule {
   async start() {
     //check if JWT_KEY is present if not app wont start
     if (!process.env.JWT_KEY) {
-      throw new Error('JWT_KEY is require')
+      throw new Error('JWT_KEY is required')
     };
 
     try {
       await mongoose.connect(this.dbUri)
     } catch (error) {
       //if dbUri is not provided app wont start
-      throw new Error('database connection error')
+      throw new DatabaseConnectionError()
     };
 
     //temporary
@@ -44,6 +46,11 @@ export class AppModule {
 
     //main routers
     this.app.use('/api/auth', authRouter);
+
+    //handle non-existent url
+    this.app.use(handleNotFound);
+    //error handler
+    this.app.use(errorHandler);
 
     this.app.listen(PORT, () => {
       console.log(`Server is listening on port ${PORT}`);
