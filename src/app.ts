@@ -1,5 +1,14 @@
 import express from "express";
 import {AppModule} from "./app.module";
+import {JwtPayload} from './utils/globals';
+
+declare global {
+  namespace Express {
+    interface Request {
+      currentUser?: JwtPayload;
+    }
+  }
+};
 
 const boostrap = async () => {
   //check if JWT_KEY is present if not app wont start
