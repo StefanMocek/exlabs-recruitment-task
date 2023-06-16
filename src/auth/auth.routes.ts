@@ -19,4 +19,4 @@ router.post('/login',
 router.get('/current-user', currentUser(process.env.JWT_KEY!), AuthController.getCurrentUser);
 router.get('/logout', currentUser(process.env.JWT_KEY!), AuthController.logout);
 
-export {router as authRouters};
+export {router as authRouter};
