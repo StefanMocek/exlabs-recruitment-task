@@ -1,5 +1,6 @@
 import {NextFunction, Request, Response} from 'express';
 import {authService} from './auth.service';
+import {BadRequestError} from '../utils/errors';
 
 class AuthController {
   public async register(req: Request, res: Response, next: NextFunction) {
@@ -7,9 +8,7 @@ class AuthController {
     const result = await authService.register({email, password});
 
     if (result.message) {
-      //to do 
-      //error - Bad request
-      return next()
+      return next(new BadRequestError(result.message));
     };
 
     req.session = {jwt: result.jwt};
@@ -22,9 +21,7 @@ class AuthController {
     const result = await authService.signin({email, password});
 
     if (result.message) {
-      //to do 
-      //error - Bad request
-      return next();
+      return next(new BadRequestError(result.message));
     };
 
     req.session = {jwt: result.jwt};

@@ -3,8 +3,7 @@ import {AuthenticationService} from '../../utils/services/authentication.service
 
 export interface AuthUserDoc extends mongoose.Document {
   email: string,
-  password: string,
-  role: string
+  password: string
 };
 
 export interface AuthUserModel extends mongoose.Model<AuthUserDoc> { };
