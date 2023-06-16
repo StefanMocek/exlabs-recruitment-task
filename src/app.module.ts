@@ -43,7 +43,7 @@ export class AppModule {
     });
 
     //main routers
-    this.app.use('/api/v1/auth', authRouter);
+    this.app.use('/api/auth', authRouter);
 
     this.app.listen(PORT, () => {
       console.log(`Server is listening on port ${PORT}`);
