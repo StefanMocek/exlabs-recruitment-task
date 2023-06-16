@@ -6,6 +6,9 @@ import cors from 'cors';
 import cookieSession from 'cookie-session';
 import mongoose from 'mongoose';
 
+//routers
+import {authRouter} from './auth/auth.routes';
+
 const PORT = process.env.PORT || 3000;
 
 export class AppModule {
@@ -38,6 +41,9 @@ export class AppModule {
     this.app.get('/', (req: Request, res: Response) => {
       res.send('Welcome')
     });
+
+    //main routers
+    this.app.use('/api/auth', authRouter);
 
     this.app.listen(PORT, () => {
       console.log(`Server is listening on port ${PORT}`);
