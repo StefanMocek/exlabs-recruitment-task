@@ -1,4 +1,4 @@
-import {AuthUser, AuthUserModel} from './auth.user.schema';
+import {AuthUser, AuthUserModel} from './auth.user.model';
 import {AuthUserDto} from '../dtos/auth.user.dto';
 
 export class AuthUserService {
