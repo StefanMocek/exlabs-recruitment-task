@@ -1,6 +1,6 @@
-import {body} from 'express-validator';
+import {ValidationChain, body} from 'express-validator';
 
-export const emailAndPwdValidation = [
+export const emailAndPwdValidation: ValidationChain[] = [
   body('email')
     .not().isEmpty()
     .isEmail()

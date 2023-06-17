@@ -1,4 +1,4 @@
-import {AuthUser, AuthUserModel} from './auth.user.model';
+import {AuthUser, AuthUserDoc, AuthUserModel} from './auth.user.model';
 import {AuthUserDto} from '../dtos/auth.user.dto';
 
 export class AuthUserService {
@@ -6,7 +6,7 @@ export class AuthUserService {
     public userModel: AuthUserModel
   ) { }
 
-  async create(createUserDto: AuthUserDto) {
+  async create(createUserDto: AuthUserDto): Promise<AuthUserDoc> {
     const user = new this.userModel({
       email: createUserDto.email,
       password: createUserDto.password,
@@ -15,7 +15,7 @@ export class AuthUserService {
     return await user.save();
   };
 
-  async findOneByEmail(email: string) {
+  async findOneByEmail(email: string): Promise<AuthUserDoc | null> {
     return await this.userModel.findOne({email})
   };
 };
