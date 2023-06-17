@@ -1,16 +1,18 @@
 import {UserModel, User} from './user.model';
 import {CreateUserDto, UpdateUserDto, DeleteUserDto} from '../dtos/user.dto';
 
-export class UserService {
+export class UserModelService {
   constructor(public userModel: UserModel) { };
 
   async getOneById(userId: string) {
     return await this.userModel.findOne({_id: userId});
   };
 
-  async getAllUsers(role: string) {
-    return await this.userModel
-      .find({role});
+  async getAllUsers(roleQuery?: string) {
+    if (!roleQuery) {
+      return await this.userModel.find({});
+    }
+    return await this.userModel.find({role: roleQuery});
   };
 
   async create(createUserDto: CreateUserDto) {
@@ -38,7 +40,7 @@ export class UserService {
     if (typeof updateUserDto.role !== 'undefined') {
       updateFields.role = updateUserDto.role;
     };
-    
+
     return await this.userModel.findOneAndUpdate(
       {_id: updateUserDto.userId},
       {$set: {...updateFields}},
@@ -50,4 +52,4 @@ export class UserService {
   };
 };
 
-export const userService = new UserService(User);
+export const userModelService = new UserModelService(User);
