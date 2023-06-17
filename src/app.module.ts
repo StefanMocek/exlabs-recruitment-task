@@ -8,7 +8,8 @@ import mongoose from 'mongoose';
 
 //routers
 import {authRouter} from './auth/auth.routes';
-import {errorHandler, handleNotFound} from './utils/middlewares';
+import {usersRouter} from './users/users.routes';
+import {currentUser, errorHandler, handleNotFound} from './utils/middlewares';
 import {DatabaseConnectionError} from './utils/errors';
 
 const PORT = process.env.PORT || 3000;
@@ -17,7 +18,11 @@ export class AppModule {
   constructor(public app: Application, private dbUri: string) {
     //basic settings
     app.set('trust proxy', true);
-    app.use(cors())
+    app.use(cors({
+      credentials: true,
+      origin: process.env.CLIENT_ORIGIN || '*',
+      optionsSuccessStatus: 200
+    }))
     app.use(express.urlencoded({extended: false}));
     app.use(express.json());
     app.use(cookieSession({
@@ -44,8 +49,11 @@ export class AppModule {
       res.send('Welcome')
     });
 
+    this.app.use(currentUser(process.env.JWT_KEY));
+
     //main routers
     this.app.use('/api/auth', authRouter);
+    this.app.use('/api', usersRouter)
 
     //handle non-existent url
     this.app.use(handleNotFound);
