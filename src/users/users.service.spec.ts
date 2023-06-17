@@ -114,7 +114,7 @@ describe('UsersService', () => {
       };
       const updatedUser = {...updateUserDto, _id: 'updated-user-id'};
       (userModelServiceMock.getOneById as jest.Mock).mockResolvedValue(updatedUser);
-      (userModelServiceMock.update  as jest.Mock).mockResolvedValue(updatedUser);
+      (userModelServiceMock.update as jest.Mock).mockResolvedValue(updatedUser);
 
       const result = await usersService.updateUser(updateUserDto);
 
