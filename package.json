@@ -15,7 +15,8 @@
   "license": "ISC",
   "jest": {
     "preset": "ts-jest",
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": ["./src/db/setupTests.ts"]
   },
   "dependencies": {
     "cookie-session": "^2.0.0",

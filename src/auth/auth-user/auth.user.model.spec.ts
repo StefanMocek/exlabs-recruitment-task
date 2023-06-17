@@ -1,21 +1,6 @@
-import { connectDB, dropCollections, dropDB } from "../../db/setuptestdb";
-import { AuthUser, AuthUserDoc } from "./auth.user.model";
+import { AuthUser} from "./auth.user.model";
 
 describe("AuthUser Model", () => {
-    beforeAll(async () => {
-      // Connect to the in-memory MongoDB server
-      await connectDB();
-    });
-  
-    afterAll(async () => {
-      // Disconnect and close the connection to the in-memory MongoDB server
-      await dropDB();
-    });
-  
-    afterEach(async () => {
-      // Drop all collections in the database after each test
-      await dropCollections();
-    });
   
     it("should create a new user", async () => {
       const email = "john.doe@example.com";

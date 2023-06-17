@@ -1,18 +1,5 @@
-import { connectDB, dropCollections, dropDB } from "../../db/setuptestdb";
 import { CreateUserDto } from "../dtos/user.dto";
 import { User } from "./user.model";
-
-beforeAll(async () => {
-    await connectDB();
-});
-
-afterAll(async () => {
-    await dropDB();
-});
-
-afterEach(async () => {
-    await dropCollections();
-});
 
 describe("User Model", () => {
     it("should create a user successfully", async () => {
