@@ -16,7 +16,7 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node",
-    "setupFilesAfterEnv": ["./src/db/setupTests.ts"]
+    "setupFilesAfterEnv": ["./src/db-test-setup/setupTests.ts"]
   },
   "dependencies": {
     "cookie-session": "^2.0.0",
