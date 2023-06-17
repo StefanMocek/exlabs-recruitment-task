@@ -1,21 +1,21 @@
-import {UserModel, User} from './user.model';
+import {UserModel, User, UserDoc} from './user.model';
 import {CreateUserDto, UpdateUserDto, DeleteUserDto} from '../dtos/user.dto';
 
 export class UserModelService {
   constructor(public userModel: UserModel) { };
 
-  async getOneById(userId: string) {
+  async getOneById(userId: string): Promise<UserDoc | null> {
     return await this.userModel.findOne({_id: userId});
   };
 
-  async getAllUsers(roleQuery?: string) {
+  async getAllUsers(roleQuery?: string): Promise<UserDoc[] | null> {
     if (!roleQuery) {
       return await this.userModel.find({});
     }
     return await this.userModel.find({role: roleQuery});
   };
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<UserDoc> {
     const user = new this.userModel({
       firstName: createUserDto.firstName || '',
       lastName: createUserDto.lastName || '',
@@ -26,7 +26,7 @@ export class UserModelService {
     return await user.save();
   };
 
-  async update(updateUserDto: UpdateUserDto) {
+  async update(updateUserDto: UpdateUserDto): Promise<UserDoc | null> {
     const updateFields: any = {};
 
     if (typeof updateUserDto.firstName !== 'undefined') {
@@ -47,7 +47,7 @@ export class UserModelService {
       {new: true})
   }
 
-  async delete(deleteUserDto: DeleteUserDto) {
+  async delete(deleteUserDto: DeleteUserDto): Promise<UserDoc | null> {
     return await this.userModel.findOneAndRemove({_id: deleteUserDto.userId})
   };
 };
