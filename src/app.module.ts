@@ -5,6 +5,8 @@ import express, {Application, Request, Response} from 'express';
 import cors from 'cors';
 import cookieSession from 'cookie-session';
 import mongoose from 'mongoose';
+import YAML from 'yamljs';
+import swaggerUI from 'swagger-ui-express';
 
 //routers
 import {authRouter} from './auth/auth.routes';
@@ -15,7 +17,7 @@ import {DatabaseConnectionError} from './utils/errors';
 const PORT = process.env.PORT || 3000;
 
 export class AppModule {
-  constructor(public app: Application, private dbUri: string) {
+  constructor(public app: Application, private dbUri: string, private swwagerDocPath: string) {
     //basic settings
     app.set('trust proxy', true);
     app.use(cors({
@@ -44,12 +46,16 @@ export class AppModule {
       throw new DatabaseConnectionError()
     };
 
-    //temporary
-    this.app.get('/', (req: Request, res: Response) => {
-      res.send('Welcome')
-    });
+    // read from /dist/src/module.js 
+    const swaggerDoc = YAML.load(this.swwagerDocPath);
 
     this.app.use(currentUser(process.env.JWT_KEY));
+    //Welcome page - docs link
+    this.app.get('/', (req: Request, res: Response) => {
+      res.send('<h1>Exlabs recruitment task by Stefan MOCEK</h1><a href="/api-docs">Documentation</a>');
+    });
+    //  docs route
+    this.app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 
     //main routers
     this.app.use('/api/auth', authRouter);
