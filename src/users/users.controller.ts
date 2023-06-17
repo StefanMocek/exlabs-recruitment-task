@@ -2,7 +2,7 @@ import {NextFunction, Request, Response} from 'express';
 import {CustomError} from '../utils/errors';
 import {usersService} from './users.service';
 
-class UsersController {
+export class UsersController {
   public async getAllUsers(req: Request, res: Response, next: NextFunction) {
     const {role} = req.query;
     const result = await usersService.getAll(role as string);
