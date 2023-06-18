@@ -1,7 +1,7 @@
-import {AuthenticationService} from "src/utils/services/authentication.service";
-import {AuthUserService} from "./auth-user/auth.user.service";
-import {AuthService} from "./auth.service";
-import {AuthUserDto} from "./dtos/auth.user.dto";
+import { AuthenticationService } from 'src/utils/services/authentication.service';
+import { AuthUserService } from './auth-user/auth.user.service';
+import { AuthService } from './auth.service';
+import { AuthUserDto } from './dtos/auth.user.dto';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -30,7 +30,7 @@ describe('AuthService', () => {
     };
 
     const existingAuthUser = null;
-    const newAuthUser = {_id: '123', email: createAuthUserDto.email};
+    const newAuthUser = { _id: '123', email: createAuthUserDto.email };
     const jwtToken = 'generated-jwt-token';
 
     // Mock the dependencies' methods
@@ -43,10 +43,10 @@ describe('AuthService', () => {
     expect(authUserService.findOneByEmail).toHaveBeenCalledWith(createAuthUserDto.email);
     expect(authUserService.create).toHaveBeenCalledWith(createAuthUserDto);
     expect(authenticationService.generateJwt).toHaveBeenCalledWith(
-      {email: createAuthUserDto.email, userId: newAuthUser._id},
-      process.env.JWT_KEY!
+      { email: createAuthUserDto.email, userId: newAuthUser._id },
+      process.env.JWT_KEY!,
     );
-    expect(result).toEqual({jwt: jwtToken});
+    expect(result).toEqual({ jwt: jwtToken });
   });
 
   it('should return an error message if email already exists during registration', async () => {
@@ -55,7 +55,7 @@ describe('AuthService', () => {
       password: 'password123',
     };
 
-    const existingAuthUser = {_id: '123', email: createAuthUserDto.email};
+    const existingAuthUser = { _id: '123', email: createAuthUserDto.email };
 
     // Mock the dependencies' methods
     (authUserService.findOneByEmail as jest.Mock).mockResolvedValue(existingAuthUser);
@@ -65,7 +65,7 @@ describe('AuthService', () => {
     expect(authUserService.findOneByEmail).toHaveBeenCalledWith(createAuthUserDto.email);
     expect(authUserService.create).not.toHaveBeenCalled();
     expect(authenticationService.generateJwt).not.toHaveBeenCalled();
-    expect(result).toEqual({message: 'Email already taken'});
+    expect(result).toEqual({ message: 'Email already taken' });
   });
 
   it('should sign in a user and generate a JWT', async () => {
@@ -74,7 +74,7 @@ describe('AuthService', () => {
       password: 'password123',
     };
 
-    const authUser = {_id: '123', email: signInDto.email, password: 'wrong pwd'};
+    const authUser = { _id: '123', email: signInDto.email, password: 'wrong pwd' };
     const jwtToken = 'generated-jwt-token';
 
     // Mock the dependencies' methods
@@ -87,10 +87,10 @@ describe('AuthService', () => {
     expect(authUserService.findOneByEmail).toHaveBeenCalledWith(signInDto.email);
     expect(authenticationService.passwordCompare).toHaveBeenCalledWith(authUser.password, signInDto.password);
     expect(authenticationService.generateJwt).toHaveBeenCalledWith(
-      {email: authUser.email, userId: authUser._id},
-      process.env.JWT_KEY!
+      { email: authUser.email, userId: authUser._id },
+      process.env.JWT_KEY!,
     );
-    expect(result).toEqual({jwt: jwtToken});
+    expect(result).toEqual({ jwt: jwtToken });
   });
 
   it('should return an error message if user does not exist during sign in', async () => {
@@ -109,7 +109,7 @@ describe('AuthService', () => {
     expect(authUserService.findOneByEmail).toHaveBeenCalledWith(signInDto.email);
     expect(authenticationService.passwordCompare).not.toHaveBeenCalled();
     expect(authenticationService.generateJwt).not.toHaveBeenCalled();
-    expect(result).toEqual({message: 'Wrong credentials'});
+    expect(result).toEqual({ message: 'Wrong credentials' });
   });
 
   it('should return an error message if password is incorrect during sign in', async () => {
@@ -118,7 +118,7 @@ describe('AuthService', () => {
       password: 'password123',
     };
 
-    const authUser = {_id: '123', email: signInDto.email, password: 'wrong pwd'};
+    const authUser = { _id: '123', email: signInDto.email, password: 'wrong pwd' };
 
     // Mock the dependencies' methods
     (authUserService.findOneByEmail as jest.Mock).mockResolvedValue(authUser);
@@ -129,6 +129,6 @@ describe('AuthService', () => {
     expect(authUserService.findOneByEmail).toHaveBeenCalledWith(signInDto.email);
     expect(authenticationService.passwordCompare).toHaveBeenCalledWith(authUser.password, signInDto.password);
     expect(authenticationService.generateJwt).not.toHaveBeenCalled();
-    expect(result).toEqual({message: 'Wrong credentials'});
+    expect(result).toEqual({ message: 'Wrong credentials' });
   });
 });

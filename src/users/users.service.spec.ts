@@ -1,7 +1,7 @@
-import {UserModelService} from './user/user.model.service';
-import {CreateUserDto, UpdateUserDto, DeleteUserDto} from './dtos/user.dto';
-import {UsersService} from './users.service';
-import {NotFoundError, BadRequestError} from '../utils/errors';
+import { UserModelService } from './user/user.model.service';
+import { CreateUserDto, UpdateUserDto, DeleteUserDto } from './dtos/user.dto';
+import { UsersService } from './users.service';
+import { NotFoundError, BadRequestError } from '../utils/errors';
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -45,7 +45,7 @@ describe('UsersService', () => {
   describe('getSingleUser', () => {
     it('should return user if found', async () => {
       const userId = 'user-id';
-      const user = {_id: userId, firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', role: 'user'};
+      const user = { _id: userId, firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', role: 'user' };
       (userModelServiceMock.getOneById as jest.Mock).mockResolvedValue(user);
 
       const result = await usersService.getSingleUser(userId);
@@ -73,7 +73,7 @@ describe('UsersService', () => {
         email: 'john.doe@example.com',
         role: 'user',
       };
-      const createdUser = {...createUserDto, _id: 'created-user-id'};
+      const createdUser = { ...createUserDto, _id: 'created-user-id' };
       (userModelServiceMock.create as jest.Mock).mockResolvedValue(createdUser);
       (userModelServiceMock.getOneByEmail as jest.Mock).mockResolvedValue(undefined);
 
@@ -114,7 +114,7 @@ describe('UsersService', () => {
         userId: 'user-id',
         firstName: 'John',
       };
-      const updatedUser = {...updateUserDto, _id: 'updated-user-id'};
+      const updatedUser = { ...updateUserDto, _id: 'updated-user-id' };
       (userModelServiceMock.getOneById as jest.Mock).mockResolvedValue(updatedUser);
       (userModelServiceMock.update as jest.Mock).mockResolvedValue(updatedUser);
 
