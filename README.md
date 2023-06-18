@@ -43,6 +43,9 @@ This will start the server and it will be accessible at http://localhost:3000.
 
 In dev mode You can use nodemon with command: npm run dev
 
+Testing
+To run all the tests use the command:  npm run test
+
 API Documentation
 The API documentation is available at http://localhost:3000/api-docs.
 
@@ -52,7 +55,7 @@ The application uses jsonwebtoken and cookie-session for session management.
 GitHub Actions
 In the project, a configuration file called 'deploy.yml' has been added for GitHub Actions. GitHub Actions allows for automating the build, testing, and deployment process of the application whenever changes are made to the repository.
 
-The 'deploy.yml' file defines the Continuous Integration and Continuous Deployment (CI/CD) pipeline for the application. Upon each push to the repository, GitHub Actions performs the following steps:
+The 'deploy.yml' file defines the Continuous Integration pipeline for the application. Upon each push to the repository, GitHub Actions performs the following steps:
 
 Installs Node.js with the required version.
 Sets up the environment.
@@ -60,7 +63,6 @@ Installs application dependencies.
 Builds the application.
 Runs the application tests.
 If all tests pass successfully, the application is considered valid.
-If the application is valid, a deployment artifact is created.
 
 Please note that in this case, the focus is on testing the application, and the deployment step is not included in the provided 'deploy.yml' file - it is done in second app.
 
