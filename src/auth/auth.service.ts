@@ -25,7 +25,7 @@ export class AuthService {
       return { message: 'Wrong credentials' };
     }
 
-    const pwdCompered = this.authenticationService.passwordCompare(authUser.password, signInDto.password);
+    const pwdCompered = await this.authenticationService.passwordCompare(authUser.password, signInDto.password);
 
     if (!pwdCompered) {
       return { message: 'Wrong credentials' };
