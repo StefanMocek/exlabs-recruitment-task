@@ -66,6 +66,9 @@ If all tests pass successfully, the application is considered valid.
 
 Please note that in this case, the focus is on testing the application, and the deployment step is not included in the provided 'deploy.yml' file - it is done in second app.
 
+Code formatter:
+In this project I have user prettier with config in .prettierrc file
+
 Summary
 In this solution, I presented a web application architecture based on Node.js with Express.js framework, MongoDB as the database, and JWT token-based authentication. I provided sample endpoints for basic user operations and mentioned the use of GitHub Actions for automating the build, testing, and deployment process.
 
