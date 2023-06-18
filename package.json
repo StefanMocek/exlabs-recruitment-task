@@ -8,7 +8,9 @@
     "compile": "tsc && node ./dist/src/app.js",
     "start:dev": "nodemon -e ts --exec \"npm run compile\"",
     "start": "node ./dist/src/app.js",
-    "test": "jest --runInBand --detectOpenHandles",
+    "test:unit": "jest --runInBand --detectOpenHandles --setupFilesAfterEnv './src/db-tests-setup/setupTests.ts'",
+    "test:e2e": "JWT_KEY=sampleKey jest --runInBand --detectOpenHandles --testRegex \\.spec\\.e2e\\.ts$",
+    "test": "npm run test:unit && npm run test:e2e",
     "prettier": "prettier 'src/**/*.ts'",
     "prettier:fix": "prettier --write 'src/**/*.ts'"
   },
@@ -17,10 +19,7 @@
   "license": "ISC",
   "jest": {
     "preset": "ts-jest",
-    "testEnvironment": "node",
-    "setupFilesAfterEnv": [
-      "./src/db-tests-setup/setupTests.ts"
-    ]
+    "testEnvironment": "node"
   },
   "dependencies": {
     "cookie-session": "^2.0.0",

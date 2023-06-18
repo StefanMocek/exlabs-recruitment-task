@@ -14,10 +14,8 @@ import { usersRouter } from './users/users.routes';
 import { currentUser, errorHandler, handleNotFound } from './utils/middlewares';
 import { DatabaseConnectionError } from './utils/errors';
 
-const PORT = process.env.PORT || 3000;
-
 export class AppModule {
-  constructor(public app: Application, private dbUri: string, private swwagerDocPath: string) {
+  constructor(public app: Application, private dbUri: string, private swwagerDocPath?: string) {
     //basic settings
     app.set('trust proxy', true);
     app.use(
@@ -50,16 +48,18 @@ export class AppModule {
       throw new DatabaseConnectionError();
     }
 
-    // read from /dist/src/module.js
-    const swaggerDoc = YAML.load(this.swwagerDocPath);
+    if (this.swwagerDocPath) {
+      // read from /dist/src/module.js
+      const swaggerDoc = YAML.load(this.swwagerDocPath);
+      //Welcome page - docs link
+      this.app.get('/', (req: Request, res: Response) => {
+        res.send('<h1>Exlabs recruitment task by Stefan MOCEK</h1><a href="/api-docs">Documentation</a>');
+      });
+      //  docs route
+      this.app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
+    }
 
     this.app.use(currentUser(process.env.JWT_KEY));
-    //Welcome page - docs link
-    this.app.get('/', (req: Request, res: Response) => {
-      res.send('<h1>Exlabs recruitment task by Stefan MOCEK</h1><a href="/api-docs">Documentation</a>');
-    });
-    //  docs route
-    this.app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 
     //main routers
     this.app.use('/api/auth', authRouter);
@@ -69,9 +69,5 @@ export class AppModule {
     this.app.use(handleNotFound);
     //error handler
     this.app.use(errorHandler);
-
-    this.app.listen(PORT, () => {
-      console.log(`Server is listening on port ${PORT}`);
-    });
   }
 }
