@@ -1,12 +1,12 @@
-import mongoose, {Schema} from 'mongoose';
-import {AuthenticationService} from '../../utils/services/authentication.service';
+import mongoose, { Schema } from 'mongoose';
+import { AuthenticationService } from '../../utils/services/authentication.service';
 
 export interface AuthUserDoc extends mongoose.Document {
-  email: string,
-  password: string
-};
+  email: string;
+  password: string;
+}
 
-export interface AuthUserModel extends mongoose.Model<AuthUserDoc> { };
+export interface AuthUserModel extends mongoose.Model<AuthUserDoc> {}
 
 const authUserSchema: Schema<AuthUserDoc, AuthUserModel> = new mongoose.Schema({
   email: {
@@ -24,7 +24,7 @@ authUserSchema.pre('save', async function (done) {
   if (this.isModified('password') || this.isNew) {
     const hashedPwd = await authenticationService.passwordToHash(this.get('password'));
     this.set('password', hashedPwd);
-  };
+  }
   done();
 });
 

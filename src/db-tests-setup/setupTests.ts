@@ -1,4 +1,4 @@
-import { connectDB, dropDB, dropCollections } from "./setup-functions";
+import { connectDB, dropDB, dropCollections } from './setup-functions';
 
 beforeAll(async () => {
   await connectDB();
