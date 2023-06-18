@@ -31,17 +31,18 @@ const dropCollections = async () => {
   }
 };
 
+const register = async () => {
+  return await request(app.app).post('/api/auth/register').send({
+    email: 'test1234@gmail.com',
+    password: 'samplepassword',
+  });
+};
+
 describe('Auth routes', () => {
   beforeEach(async () => {
     await dropCollections();
   });
 
-  const register = async () => {
-    return await request(app.app).post('/api/auth/register').send({
-      email: 'test1234@gmail.com',
-      password: 'samplepassword',
-    });
-  };
   describe('Register', () => {
     it('should register new user', async () => {
       const response = await request(app.app).post('/api/auth/register').send({
@@ -155,6 +156,263 @@ describe('Auth routes', () => {
       const cookies = response.get('Set-Cookie');
       const expiresCookie = cookies.find((cookie: string) => cookie.includes('expires='));
       expect(expiresCookie).toMatch(/expires=/);
+    });
+  });
+});
+
+describe('Users routes', () => {
+  let cookie: any;
+
+  beforeEach(async () => {
+    await dropCollections();
+
+    const response = await register();
+    expect(response.status).toBe(201);
+    cookie = response.get('Set-Cookie');
+  });
+
+  describe('Get All Users', () => {
+    it('should get all users', async () => {
+      const response = await request(app.app)
+        .get('/api/users')
+        .set('Cookie', cookie)
+        .expect(200);
+
+      expect(response.body).toBeDefined();
+    });
+
+    it('should get all users with role=user', async () => {
+      const response = await request(app.app)
+        .get('/api/users')
+        .query({ role: 'user' })
+        .set('Cookie', cookie)
+        .expect(200);
+
+      expect(response.body).toBeDefined();
+    });
+
+    it('should get all users with role=admin', async () => {
+      const response = await request(app.app)
+        .get('/api/users')
+        .query({ role: 'admin' })
+        .set('Cookie', cookie)
+        .expect(200);
+
+      expect(response.body).toBeDefined();
+    });
+  });
+
+  describe('Create User', () => {
+    it('should create a new user', async () => {
+      const response = await request(app.app)
+        .post('/api/user')
+        .set('Cookie', cookie)
+        .send({
+          firstName: 'Test First',
+          lastName: 'Test Last',
+          email: 'testuser@example.com',
+          role: 'user',
+        })
+        .expect(201);
+
+      expect(response.body).toBeDefined();
+    });
+
+    it('should not create user without required fields', async () => {
+      const response = await request(app.app)
+        .post('/api/user')
+        .set('Cookie', cookie)
+        .send({})
+        .expect(400);
+
+      expect(response.body.errors.length).toBe(3);
+    });
+
+    it('should not create user without required email', async () => {
+      const response = await request(app.app)
+        .post('/api/user')
+        .set('Cookie', cookie)
+        .send({
+          firstName: "test name",
+          lastName: "test last",
+          role: "user"
+        })
+        .expect(400);
+
+      expect(response.body.errors.length).toBe(2);
+    });
+
+    it('should not create user without required role', async () => {
+      const response = await request(app.app)
+        .post('/api/user')
+        .set('Cookie', cookie)
+        .send({
+          firstName: "test name",
+          lastName: "test last",
+          email: "test123@test.com",
+        })
+        .expect(400);
+
+      expect(response.body.errors.length).toBe(1);
+    });
+
+    it('should not create user with wrong role', async () => {
+      const response = await request(app.app)
+        .post('/api/user')
+        .set('Cookie', cookie)
+        .send({
+          firstName: "test name",
+          lastName: "test last",
+          email: "test123@test.com",
+          role: "userr"
+        })
+        .expect(400);
+
+      expect(response.body.errors.length).toBe(1);
+    });
+  });
+
+  describe('Update User', () => {
+    let userId: string;
+
+    beforeEach(async () => {
+      const createUserResponse = await request(app.app)
+        .post('/api/user')
+        .set('Cookie', cookie)
+        .send({
+          firstName: 'Test First',
+          lastName: 'Test Last',
+          email: 'testuser@example.com',
+          role: 'user',
+        })
+        .expect(201);
+
+      userId = createUserResponse.body._id;
+      expect(userId).toBeDefined();
+    });
+
+    it('should update a user', async () => {
+      const response = await request(app.app)
+        .patch(`/api/user/${userId}`)
+        .set('Cookie', cookie)
+        .send({
+          lastName: 'Updated Last Name',
+        })
+        .expect(200);
+
+      expect(response.body).toBeDefined();
+    });
+
+    it('should not update user with no data', async () => {
+      const response = await request(app.app)
+        .patch(`/api/user/${userId}`)
+        .set('Cookie', cookie)
+        .send({})
+        .expect(400);
+
+      expect(response.body.errors.length).toBe(1);
+      expect(response.body.errors[0].message).toBe('You should provide at least one property');
+    });
+
+    it('should not update user with wrong role', async () => {
+      const response = await request(app.app)
+        .patch(`/api/user/${userId}`)
+        .set('Cookie', cookie)
+        .send({
+          lastName: 'Updated Last Name',
+          role: 'adminer'
+        })
+        .expect(400);
+
+      expect(response.body.errors.length).toBe(1);
+    });
+
+    it('should not update non-existing user', async () => {
+      const response = await request(app.app)
+        .patch('/api/user/648e10c5453611c8d3c4dc11')
+        .set('Cookie', cookie)
+        .send({
+          lastName: 'Updated Last Name',
+        })
+        .expect(404);
+
+      expect(response.body.errors.length).toBe(1);
+    });
+  });
+
+  describe('Get One User', () => {
+    let userId: string;
+
+    beforeEach(async () => {
+      const createUserResponse = await request(app.app)
+        .post('/api/user')
+        .set('Cookie', cookie)
+        .send({
+          firstName: 'Test First',
+          lastName: 'Test Last',
+          email: 'testuser@example.com',
+          role: 'user',
+        })
+        .expect(201);
+
+      userId = createUserResponse.body._id;
+      expect(userId).toBeDefined();
+    });
+
+    it('should get one user', async () => {
+      const response = await request(app.app)
+        .get(`/api/user/${userId}`)
+        .set('Cookie', cookie)
+        .expect(200);
+
+      expect(response.body).toBeDefined();
+    });
+
+    it('should not get non-existing user', async () => {
+      const response = await request(app.app)
+        .get('/api/user/648e10c5453611c8d3c4dc11')
+        .set('Cookie', cookie)
+        .expect(404);
+
+      expect(response.body.errors.length).toBe(1);
+    });
+  });
+
+  describe('Delete User', () => {
+    let userId: string;
+
+    beforeEach(async () => {
+      const createUserResponse = await request(app.app)
+        .post('/api/user')
+        .set('Cookie', cookie)
+        .send({
+          firstName: 'Test First',
+          lastName: 'Test Last',
+          email: 'testuser@example.com',
+          role: 'user',
+        })
+        .expect(201);
+
+      userId = createUserResponse.body._id;
+      expect(userId).toBeDefined();
+    });
+
+    it('should delete a user', async () => {
+      const response = await request(app.app)
+        .delete(`/api/user/${userId}`)
+        .set('Cookie', cookie)
+        .expect(200);
+
+      expect(response.body).toBeDefined();
+    });
+
+    it('should not delete non-existing user', async () => {
+      const response = await request(app.app)
+        .delete('/api/user/648e10c5453611c8d3c4dc11')
+        .set('Cookie', cookie)
+        .expect(404);
+
+      expect(response.body.errors.length).toBe(1);
     });
   });
 });
