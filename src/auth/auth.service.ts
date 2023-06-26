@@ -4,14 +4,14 @@ import { AuthenticationService } from '../utils/services/authentication.service'
 import { BadRequestError } from '../utils/errors';
 
 export class AuthService {
-  constructor(public authUserService: AuthUserService, public authenticationService: AuthenticationService) { }
+  constructor(public authUserService: AuthUserService, public authenticationService: AuthenticationService) {}
 
   async register(createAuthUserDto: AuthUserDto): Promise<BadRequestError | { jwt: string }> {
     const existingAuthUser = await this.authUserService.findOneByEmail(createAuthUserDto.email);
     if (existingAuthUser) {
       return new BadRequestError('Email already taken');
     }
-    
+
     const newAuthUser = await this.authUserService.create(createAuthUserDto);
 
     const jwt = this.authenticationService.generateJwt(

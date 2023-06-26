@@ -1,4 +1,4 @@
-import { AuthenticationService } from 'src/utils/services/authentication.service';
+import { AuthenticationService } from '../utils/services/authentication.service';
 import { AuthUserService } from './auth-user/auth.user.service';
 import { AuthService } from './auth.service';
 import { AuthUserDto } from './dtos/auth.user.dto';
@@ -60,7 +60,7 @@ describe('AuthService', () => {
     (authUserService.findOneByEmail as jest.Mock).mockResolvedValue(existingAuthUser);
 
     const result = await authService.register(createAuthUserDto);
-    
+
     expect(authUserService.findOneByEmail).toHaveBeenCalledWith(createAuthUserDto.email);
     expect(authUserService.create).not.toHaveBeenCalled();
     expect(authenticationService.generateJwt).not.toHaveBeenCalled();

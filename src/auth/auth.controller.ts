@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { authService } from './auth.service';
-import { BadRequestError, CustomError } from '../utils/errors';
+import { CustomError } from '../utils/errors';
 
 class AuthController {
   public async register(req: Request, res: Response, next: NextFunction) {
