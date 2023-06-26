@@ -1,14 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import { authService } from './auth.service';
-import { BadRequestError } from '../utils/errors';
+import { BadRequestError, CustomError } from '../utils/errors';
 
 class AuthController {
   public async register(req: Request, res: Response, next: NextFunction) {
     const { email, password } = req.body;
     const result = await authService.register({ email, password });
 
-    if (result.message) {
-      return next(new BadRequestError(result.message));
+    if (result instanceof CustomError) {
+      return next(result);
     }
 
     req.session = { jwt: result.jwt };
@@ -20,8 +20,8 @@ class AuthController {
     const { email, password } = req.body;
     const result = await authService.signin({ email, password });
 
-    if (result.message) {
-      return next(new BadRequestError(result.message));
+    if (result instanceof CustomError) {
+      return next(result);
     }
 
     req.session = { jwt: result.jwt };
