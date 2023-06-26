@@ -34,7 +34,6 @@ describe('AuthService', () => {
     const newAuthUser = { _id: '123', email: createAuthUserDto.email };
     const jwtToken = 'generated-jwt-token';
 
-    // Mock the dependencies' methods
     (authUserService.findOneByEmail as jest.Mock).mockResolvedValue(existingAuthUser);
     (authUserService.create as jest.Mock).mockResolvedValue(newAuthUser);
     (authenticationService.generateJwt as jest.Mock).mockReturnValue(jwtToken);
@@ -58,11 +57,10 @@ describe('AuthService', () => {
 
     const existingAuthUser = { _id: '123', email: createAuthUserDto.email };
 
-    // Mock the dependencies' methods
     (authUserService.findOneByEmail as jest.Mock).mockResolvedValue(existingAuthUser);
 
     const result = await authService.register(createAuthUserDto);
-
+    
     expect(authUserService.findOneByEmail).toHaveBeenCalledWith(createAuthUserDto.email);
     expect(authUserService.create).not.toHaveBeenCalled();
     expect(authenticationService.generateJwt).not.toHaveBeenCalled();
@@ -78,7 +76,6 @@ describe('AuthService', () => {
     const authUser = { _id: '123', email: signInDto.email, password: 'wrong pwd' };
     const jwtToken = 'generated-jwt-token';
 
-    // Mock the dependencies' methods
     (authUserService.findOneByEmail as jest.Mock).mockResolvedValue(authUser);
     (authenticationService.passwordCompare as jest.Mock).mockReturnValue(true);
     (authenticationService.generateJwt as jest.Mock).mockReturnValue(jwtToken);
@@ -102,7 +99,6 @@ describe('AuthService', () => {
 
     const authUser = null;
 
-    // Mock the dependencies' methods
     (authUserService.findOneByEmail as jest.Mock).mockResolvedValue(authUser);
 
     const result = await authService.signin(signInDto);
@@ -121,7 +117,6 @@ describe('AuthService', () => {
 
     const authUser = { _id: '123', email: signInDto.email, password: 'wrong pwd' };
 
-    // Mock the dependencies' methods
     (authUserService.findOneByEmail as jest.Mock).mockResolvedValue(authUser);
     (authenticationService.passwordCompare as jest.Mock).mockReturnValue(false);
 
