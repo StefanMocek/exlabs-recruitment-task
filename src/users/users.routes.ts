@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { requireAuth } from '../utils/middlewares';
-import usersController from './users.controller';
+import { usersController } from './users.controller';
 import { validateRequest } from '../utils/middlewares';
 import { createUserValidation, idParamValidation, roleQueryValidation, updateUserValidation } from './validators';
 

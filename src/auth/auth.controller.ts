@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { authService } from './auth.service';
 import { CustomError } from '../utils/errors';
 
-class AuthController {
+export class AuthController {
   public async register(req: Request, res: Response, next: NextFunction) {
     const { email, password } = req.body;
     const result = await authService.register({ email, password });
@@ -39,4 +39,4 @@ class AuthController {
   }
 }
 
-export default new AuthController();
+export const authController = new AuthController();
