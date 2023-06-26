@@ -2,6 +2,7 @@ import { AuthenticationService } from 'src/utils/services/authentication.service
 import { AuthUserService } from './auth-user/auth.user.service';
 import { AuthService } from './auth.service';
 import { AuthUserDto } from './dtos/auth.user.dto';
+import { BadRequestError } from '../utils/errors';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -65,7 +66,7 @@ describe('AuthService', () => {
     expect(authUserService.findOneByEmail).toHaveBeenCalledWith(createAuthUserDto.email);
     expect(authUserService.create).not.toHaveBeenCalled();
     expect(authenticationService.generateJwt).not.toHaveBeenCalled();
-    expect(result).toEqual({ message: 'Email already taken' });
+    expect(result).toBeInstanceOf(BadRequestError);
   });
 
   it('should sign in a user and generate a JWT', async () => {
@@ -109,7 +110,7 @@ describe('AuthService', () => {
     expect(authUserService.findOneByEmail).toHaveBeenCalledWith(signInDto.email);
     expect(authenticationService.passwordCompare).not.toHaveBeenCalled();
     expect(authenticationService.generateJwt).not.toHaveBeenCalled();
-    expect(result).toEqual({ message: 'Wrong credentials' });
+    expect(result).toBeInstanceOf(BadRequestError);
   });
 
   it('should return an error message if password is incorrect during sign in', async () => {
@@ -129,6 +130,6 @@ describe('AuthService', () => {
     expect(authUserService.findOneByEmail).toHaveBeenCalledWith(signInDto.email);
     expect(authenticationService.passwordCompare).toHaveBeenCalledWith(authUser.password, signInDto.password);
     expect(authenticationService.generateJwt).not.toHaveBeenCalled();
-    expect(result).toEqual({ message: 'Wrong credentials' });
+    expect(result).toBeInstanceOf(BadRequestError);
   });
 });
