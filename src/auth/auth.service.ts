@@ -1,7 +1,7 @@
 import { AuthUserDto } from './dtos/auth.user.dto';
 import { AuthUserService, authUserService } from './auth-user/auth.user.service';
 import { AuthenticationService } from '../utils/services/authentication.service';
-import { BadRequestError } from 'src/utils/errors';
+import { BadRequestError } from '../utils/errors';
 
 export class AuthService {
   constructor(public authUserService: AuthUserService, public authenticationService: AuthenticationService) { }
@@ -10,8 +10,8 @@ export class AuthService {
     const existingAuthUser = await this.authUserService.findOneByEmail(createAuthUserDto.email);
     if (existingAuthUser) {
       return new BadRequestError('Email already taken');
-      // return { message: 'Email already taken' };
     }
+    
     const newAuthUser = await this.authUserService.create(createAuthUserDto);
 
     const jwt = this.authenticationService.generateJwt(
