@@ -26,7 +26,7 @@ export class AppModule {
         credentials: true,
         origin: process.env.CLIENT_ORIGIN || '*',
         optionsSuccessStatus: 200,
-      })
+      }),
     );
     this.app.use(express.urlencoded({ extended: false }));
     this.app.use(express.json());
@@ -34,7 +34,7 @@ export class AppModule {
       cookieSession({
         signed: false,
         secure: false,
-      })
+      }),
     );
   }
 

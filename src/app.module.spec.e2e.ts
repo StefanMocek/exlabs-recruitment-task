@@ -173,10 +173,7 @@ describe('Users routes', () => {
 
   describe('Get All Users', () => {
     it('should get all users', async () => {
-      const response = await request(app.app)
-        .get('/api/users')
-        .set('Cookie', cookie)
-        .expect(200);
+      const response = await request(app.app).get('/api/users').set('Cookie', cookie).expect(200);
 
       expect(response.body).toBeDefined();
     });
@@ -219,11 +216,7 @@ describe('Users routes', () => {
     });
 
     it('should not create user without required fields', async () => {
-      const response = await request(app.app)
-        .post('/api/user')
-        .set('Cookie', cookie)
-        .send({})
-        .expect(400);
+      const response = await request(app.app).post('/api/user').set('Cookie', cookie).send({}).expect(400);
 
       expect(response.body.errors.length).toBe(3);
     });
@@ -233,9 +226,9 @@ describe('Users routes', () => {
         .post('/api/user')
         .set('Cookie', cookie)
         .send({
-          firstName: "test name",
-          lastName: "test last",
-          role: "user"
+          firstName: 'test name',
+          lastName: 'test last',
+          role: 'user',
         })
         .expect(400);
 
@@ -247,9 +240,9 @@ describe('Users routes', () => {
         .post('/api/user')
         .set('Cookie', cookie)
         .send({
-          firstName: "test name",
-          lastName: "test last",
-          email: "test123@test.com",
+          firstName: 'test name',
+          lastName: 'test last',
+          email: 'test123@test.com',
         })
         .expect(400);
 
@@ -261,10 +254,10 @@ describe('Users routes', () => {
         .post('/api/user')
         .set('Cookie', cookie)
         .send({
-          firstName: "test name",
-          lastName: "test last",
-          email: "test123@test.com",
-          role: "userr"
+          firstName: 'test name',
+          lastName: 'test last',
+          email: 'test123@test.com',
+          role: 'userr',
         })
         .expect(400);
 
@@ -304,11 +297,7 @@ describe('Users routes', () => {
     });
 
     it('should not update user with no data', async () => {
-      const response = await request(app.app)
-        .patch(`/api/user/${userId}`)
-        .set('Cookie', cookie)
-        .send({})
-        .expect(400);
+      const response = await request(app.app).patch(`/api/user/${userId}`).set('Cookie', cookie).send({}).expect(400);
 
       expect(response.body.errors.length).toBe(1);
       expect(response.body.errors[0].message).toBe('You should provide at least one property');
@@ -320,7 +309,7 @@ describe('Users routes', () => {
         .set('Cookie', cookie)
         .send({
           lastName: 'Updated Last Name',
-          role: 'adminer'
+          role: 'adminer',
         })
         .expect(400);
 
@@ -360,10 +349,7 @@ describe('Users routes', () => {
     });
 
     it('should get one user', async () => {
-      const response = await request(app.app)
-        .get(`/api/user/${userId}`)
-        .set('Cookie', cookie)
-        .expect(200);
+      const response = await request(app.app).get(`/api/user/${userId}`).set('Cookie', cookie).expect(200);
 
       expect(response.body).toBeDefined();
     });
@@ -398,10 +384,7 @@ describe('Users routes', () => {
     });
 
     it('should delete a user', async () => {
-      const response = await request(app.app)
-        .delete(`/api/user/${userId}`)
-        .set('Cookie', cookie)
-        .expect(200);
+      const response = await request(app.app).delete(`/api/user/${userId}`).set('Cookie', cookie).expect(200);
 
       expect(response.body).toBeDefined();
     });
